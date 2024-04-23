@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.simpleapp.movieinfo.databinding.FragmentNotificationsBinding;
+import com.simpleapp.movieinfo.viewmodel.favorites.NotificationsViewModel;
 
 public class NotificationsFragment extends Fragment {
 

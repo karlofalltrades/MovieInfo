@@ -1,4 +1,4 @@
-package com.simpleapp.movieinfo.api;
+package com.simpleapp.movieinfo.utils.retrofit;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;

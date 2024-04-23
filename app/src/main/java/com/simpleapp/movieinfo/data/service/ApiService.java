@@ -1,17 +1,23 @@
-package com.simpleapp.movieinfo.api;
+package com.simpleapp.movieinfo.data.service;
 
 import com.simpleapp.movieinfo.model.MovieResponse;
 
 import io.reactivex.rxjava3.core.Single;
+import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface ApiService {
     @GET("search")
-    Single<MovieResponse> getMovies(
+    Call<MovieResponse> getMovies(
             @Query("term") String term,
             @Query("country") String country,
             @Query("media") String media
     );
+//    Single<MovieResponse> getMovies(
+//            @Query("term") String term,
+//            @Query("country") String country,
+//            @Query("media") String media
+//    );
 }
 
