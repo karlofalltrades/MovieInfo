@@ -3,7 +3,6 @@ package com.simpleapp.movieinfo.data.service;
 import com.simpleapp.movieinfo.model.MovieResponse;
 
 import io.reactivex.rxjava3.core.Single;
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 

@@ -2,82 +2,53 @@ package com.simpleapp.movieinfo.utils.cache;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+public class CacheManager {
+    private static final String PREF_NAME = "MyCachePrefs";
+    private static final Gson gson = new Gson();
 
-public class CacheManager<T> {
-    private static final String PREFS_NAME = "MyPrefs";
-    private Context context;
-
-    public CacheManager(Context context) {
-        this.context = context;
-    }
-
-    public void saveToDiskCache(String key, T data) {
-        File cacheFile = new File(context.getCacheDir(), key);
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(cacheFile);
-            fos.write(serialize(data).getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    public void saveToSharedPreferences(String key, T data) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+    public static <T> void saveToCache(Context context, String key, T data) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(key, serialize(data));
+        String json = gson.toJson(data);
+        editor.putString(key, json);
         editor.apply();
     }
 
-    public T retrieveFromSharedPreferences(String key) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        String serializedData = sharedPreferences.getString(key, null);
-        return deserialize(serializedData);
-    }
-
-    public T retrieveFromDiskCache(String key) {
-        File cacheFile = new File(context.getCacheDir(), key);
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(cacheFile);
-            byte[] buffer = new byte[(int) cacheFile.length()];
-            fis.read(buffer);
-            return deserialize(new String(buffer));
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static <T> T getFromCache(Context context, String key, Class<T> clazz) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String json = sharedPreferences.getString(key, null);
+        if (json != null) {
+            return gson.fromJson(json, clazz);
+        } else {
             return null;
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
-    private String serialize(T data) {
-        return new Gson().toJson(data);
+    public static <T> void saveToCacheDir(Context context, String fileName, T data) {
+        try {
+            String json = gson.toJson(data);
+            java.io.FileWriter writer = new java.io.FileWriter(new java.io.File(context.getCacheDir(), fileName));
+            writer.write(json);
+            writer.close();
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private T deserialize(String serializedData) {
-        return new Gson().fromJson(serializedData, new TypeToken<T>(){}.getType());
+    public static <T> T getFromCacheDir(Context context, String fileName, Type type) {
+        try {
+            java.io.FileReader reader = new java.io.FileReader(new java.io.File(context.getCacheDir(), fileName));
+            return gson.fromJson(reader, type);
+        } catch (java.io.FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
 }

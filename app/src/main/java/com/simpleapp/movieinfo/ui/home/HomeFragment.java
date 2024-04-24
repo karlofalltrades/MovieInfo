@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -46,37 +45,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        homeViewModel.disposeSubscription();
         binding = null;
     }
 }
-//public class HomeFragment extends Fragment {
-//    private RecyclerView recyclerView;
-//    private HomeAdapter adapter;
-//    private FragmentHomeBinding binding;
-//
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        HomeViewModel viewModel = new ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().getApplication())).get(HomeViewModel.class);
-//        binding = FragmentHomeBinding.inflate(inflater, container, false);
-//        View view = binding.getRoot();
-//
-//        recyclerView = binding.recyclerViewHome;
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        adapter = new HomeAdapter();
-//        recyclerView.setAdapter(adapter);
-//        viewModel.fetchMovies();
-//
-//        viewModel.getMoviesLiveData().observe(getViewLifecycleOwner(), movies -> {
-//            adapter.setMovies(movies);
-//        });
-//
-//        return view;
-//    }
-//
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//        binding = null;
-//    }
-//}
