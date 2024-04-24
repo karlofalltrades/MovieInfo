@@ -1,57 +1,63 @@
 package com.simpleapp.movieinfo.viewmodel.home;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.simpleapp.movieinfo.data.repository.Repository;
-import com.simpleapp.movieinfo.data.service.ApiService;
 import com.simpleapp.movieinfo.model.Movie;
-import com.simpleapp.movieinfo.model.MovieResponse;
-import com.simpleapp.movieinfo.utils.retrofit.RetrofitClientInstance;
+import com.simpleapp.movieinfo.utils.cache.CacheManager;
 
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.SingleObserver;
-import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class HomeViewModel extends ViewModel {
     private MutableLiveData<List<Movie>> moviesLiveData = new MutableLiveData<>();
-    private ApiService apiService;
+    private Repository repository;
+    private CacheManager<List<Movie>> cacheManager;
 
-    public HomeViewModel() {
-        apiService = RetrofitClientInstance.getRetrofitInstance().create(ApiService.class);
+    public void init(Context context) {
+        repository = new Repository(context);
+        cacheManager = new CacheManager<>(context);
     }
 
     public void fetchMovies() {
-//        apiService.getMovies("star", "au", "movie")
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new SingleObserver<MovieResponse>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                    }
-//
-//                    @Override
-//                    public void onSuccess(MovieResponse movieResponse) {
-//                        moviesLiveData.setValue(movieResponse.getMovies());
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        // Handle error
-//                    }
-//                });
+        List<Movie> cachedMovies = retrieveFromCache();
+        if (cachedMovies != null && !cachedMovies.isEmpty()) {
+            moviesLiveData.setValue(cachedMovies);
+        } else {
+            repository.fetchMoviesFromApi()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(movies -> {
+                        // Update the moviesLiveData with the fetched movies
+                        moviesLiveData.setValue(movies);
+                        saveToCache(movies);
+                    }, throwable -> {
+                        // Handle failure, if needed
+                        Log.e("HomeViewModel", "Failed to fetch movies", throwable);
+                    });
+        }
+    }
+
+    public void saveToCache(List<Movie> movies) {
+        cacheManager.saveToDiskCache("movies", movies);
+    }
+
+    public List<Movie> retrieveFromCache() {
+        return cacheManager.retrieveFromDiskCache("movies");
     }
 
     public LiveData<List<Movie>> getMoviesLiveData() {
         return moviesLiveData;
     }
 }
+
 
 //public class HomeViewModel extends ViewModel {
 //    private MutableLiveData<List<Movie>> moviesLiveData = new MutableLiveData<>();

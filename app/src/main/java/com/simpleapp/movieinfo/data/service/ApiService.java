@@ -9,15 +9,10 @@ import retrofit2.http.Query;
 
 public interface ApiService {
     @GET("search")
-    Call<MovieResponse> getMovies(
+    Single<MovieResponse> getMovies(
             @Query("term") String term,
             @Query("country") String country,
             @Query("media") String media
     );
-//    Single<MovieResponse> getMovies(
-//            @Query("term") String term,
-//            @Query("country") String country,
-//            @Query("media") String media
-//    );
 }
 
