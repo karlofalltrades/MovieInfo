@@ -26,7 +26,6 @@ public class MovieGenreRecyclerViewManager {
     }
 
     public void addMovies(List<Movie> movies) {
-        // Group movies by genre
         for (Movie movie : movies) {
             String genre = movie.getPrimaryGenreName();
             List<Movie> genreMovies = genreMoviesMap.get(genre);
@@ -37,7 +36,6 @@ public class MovieGenreRecyclerViewManager {
             genreMovies.add(movie);
         }
 
-        // Create and populate RecyclerViews for each genre
         for (Map.Entry<String, List<Movie>> entry : genreMoviesMap.entrySet()) {
             String genre = entry.getKey();
             List<Movie> genreMovies = entry.getValue();
@@ -55,7 +53,6 @@ public class MovieGenreRecyclerViewManager {
         ));
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
 
-        // Create and set adapter for RecyclerView
         HomeAdapter adapter = new HomeAdapter();
         adapter.setMovies(movies);
         recyclerView.setAdapter(adapter);

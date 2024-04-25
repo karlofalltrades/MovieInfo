@@ -28,7 +28,7 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         recyclerView = binding.recyclerViewHome;
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         adapter = new HomeAdapter();
         recyclerView.setAdapter(adapter);
 

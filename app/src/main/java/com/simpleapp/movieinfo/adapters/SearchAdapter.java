@@ -5,20 +5,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.simpleapp.movieinfo.model.Movie;
 import com.simpleapp.movieinfo.R;
+import com.simpleapp.movieinfo.model.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MovieViewHolder> {
-    private List<Movie> movies;
+public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MovieViewHolder> {
 
-    public void setMovies(List<Movie> movies) {
-        this.movies = movies;
+    private List<Movie> movieList;
+
+    public SearchAdapter(List<Movie> movieList) {
+        this.movieList = movieList;
+    }
+
+    public void updateList(List<Movie> newList) {
+        movieList = newList;
         notifyDataSetChanged();
     }
 
@@ -31,13 +37,12 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MovieViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
-        Movie movie = movies.get(position);
-        holder.bind(movie);
+        holder.bind(movieList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return movies != null ? movies.size() : 0;
+        return movieList.size();
     }
 
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
@@ -64,4 +69,3 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MovieViewHolde
         }
     }
 }
-
