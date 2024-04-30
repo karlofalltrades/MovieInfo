@@ -19,6 +19,8 @@ public class DashboardViewModel extends ViewModel {
     private MutableLiveData<List<Movie>> movies;
     private Context context;
 
+    private List<Movie> cachedMovies;
+
     public void init(Context context) {
         this.context = context;
     }
@@ -33,7 +35,7 @@ public class DashboardViewModel extends ViewModel {
 
     private void loadMovies() {
         Type listType = new TypeToken<List<Movie>>() {}.getType();
-        List<Movie> cachedMovies = CacheManager.getFromCacheDir(context, "movies_cache.json", listType);
+        cachedMovies = CacheManager.getFromCacheDir(context, "movies_cache.json", listType);
         movies.postValue(cachedMovies);
     }
 
@@ -45,7 +47,9 @@ public class DashboardViewModel extends ViewModel {
                     filteredMovies.add(movie);
                 }
             }
-            movies.postValue(filteredMovies);
+            if (!filteredMovies.isEmpty()) {
+                movies.postValue(filteredMovies);
+            }
         }
     }
 }

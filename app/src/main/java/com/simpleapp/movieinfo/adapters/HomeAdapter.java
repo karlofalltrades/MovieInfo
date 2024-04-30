@@ -1,10 +1,10 @@
 package com.simpleapp.movieinfo.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +17,7 @@ import java.util.List;
 
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MovieViewHolder> {
     private List<Movie> movies;
+    private Context context;
 
     public void setMovies(List<Movie> movies) {
         this.movies = movies;

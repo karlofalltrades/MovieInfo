@@ -37,23 +37,37 @@ public class DashboardFragment extends Fragment {
         dashboardViewModel.getMovies().observe(getViewLifecycleOwner(), movies -> {
             adapter.updateList(movies);
         });
-
+        recyclerView.setVisibility(View.INVISIBLE);
         SearchView searchView = binding.searchView;
+        setupSearchViewListener(searchView);
+
+        return binding.getRoot();
+    }
+
+    private void setupSearchViewListener(SearchView searchView) {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                dashboardViewModel.searchMovies(query);
+                if (!query.trim().isEmpty()) {
+                    if (recyclerView.getVisibility() == View.GONE || recyclerView.getVisibility() == View.INVISIBLE) recyclerView.setVisibility(View.VISIBLE);
+                    dashboardViewModel.searchMovies(query);
+                } else {
+                    recyclerView.setVisibility(View.INVISIBLE);
+                }
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                dashboardViewModel.searchMovies(newText);
+                if (!newText.trim().isEmpty()) {
+                    if (recyclerView.getVisibility() == View.GONE || recyclerView.getVisibility() == View.INVISIBLE) recyclerView.setVisibility(View.VISIBLE);
+                    dashboardViewModel.searchMovies(newText);
+                } else {
+                    recyclerView.setVisibility(View.INVISIBLE);
+                }
                 return false;
             }
         });
-
-        return binding.getRoot();
     }
 
     @Override
