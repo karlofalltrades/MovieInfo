@@ -34,9 +34,7 @@ public class DashboardFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
-        dashboardViewModel.getMovies().observe(getViewLifecycleOwner(), movies -> {
-            adapter.updateList(movies);
-        });
+        dashboardViewModel.getMovies().observe(getViewLifecycleOwner(), movies -> adapter.updateList(movies));
         recyclerView.setVisibility(View.INVISIBLE);
         SearchView searchView = binding.searchView;
         setupSearchViewListener(searchView);
