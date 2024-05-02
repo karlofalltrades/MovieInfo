@@ -1,9 +1,10 @@
 package com.simpleapp.movieinfo.model;
+import java.io.Serializable;
 import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Movie {
+public class Movie implements Serializable {
 
     public Movie(String wrapperType, String kind, int collectionId, int trackId, String artistName, String collectionName, String trackName, String collectionCensoredName, String trackCensoredName, int collectionArtistId, String collectionArtistViewUrl, String collectionViewUrl, String trackViewUrl, String previewUrl, String artworkUrl30, String artworkUrl60, String artworkUrl100, double collectionPrice, double trackPrice, double trackRentalPrice, double collectionHdPrice, double trackHdPrice, double trackHdRentalPrice, Date releaseDate, String collectionExplicitness, String trackExplicitness, int trackCount, int trackNumber, int trackTimeMillis, String country, String currency, String primaryGenreName, String contentAdvisoryRating, String shortDescription, String longDescription, boolean hasITunesExtras) {
         this.wrapperType = wrapperType;

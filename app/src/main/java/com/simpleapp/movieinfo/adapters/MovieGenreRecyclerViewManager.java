@@ -1,6 +1,7 @@
 package com.simpleapp.movieinfo.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.simpleapp.movieinfo.R;
 import com.simpleapp.movieinfo.model.Movie;
+import com.simpleapp.movieinfo.ui.details.MovieDetailsActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,6 +105,11 @@ public class MovieGenreRecyclerViewManager {
         HomeAdapter adapter = new HomeAdapter();
         adapter.setMovies(movies);
         recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(movie -> {
+            Intent intent = new Intent(context, MovieDetailsActivity.class);
+            intent.putExtra("movie", movie);
+            context.startActivity(intent);
+        });
 
         return recyclerView;
     }

@@ -18,17 +18,26 @@ import java.util.List;
 public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MovieViewHolder> {
     private List<Movie> movies;
     private Context context;
+    private OnItemClickListener onItemClickListener;
 
     public void setMovies(List<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(Movie movie);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_item, parent, false);
-        return new MovieViewHolder(view);
+        return new MovieViewHolder(view, onItemClickListener, movies);
     }
 
     @Override
@@ -46,18 +55,26 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MovieViewHolde
         ImageView artWorkImage;
         TextView trackName, trackPrice, primaryGenre;
 
-        public MovieViewHolder(@NonNull View itemView) {
+        public MovieViewHolder(@NonNull View itemView, OnItemClickListener onItemClickListener, List<Movie> movies) {
             super(itemView);
             artWorkImage = itemView.findViewById(R.id.imageViewArtwork);
             trackName = itemView.findViewById(R.id.textViewTrackName);
             trackPrice = itemView.findViewById(R.id.textViewTrackPrice);
             primaryGenre = itemView.findViewById(R.id.textViewPrimaryGenre);
+            itemView.setOnClickListener( v -> {
+                if (onItemClickListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION){
+                        onItemClickListener.onItemClick(movies.get(position));
+                    }
+                }
+            });
         }
 
         public void bind(Movie movie) {
             Picasso.get().load(extractIdFromUrl(movie.getArtworkUrl100())).into(artWorkImage);
             trackName.setText(movie.getTrackName());
-            trackPrice.setText(String.valueOf(movie.getTrackPrice()));
+            trackPrice.setText(String.format("$%.2f", movie.getTrackPrice()));
             primaryGenre.setText(movie.getPrimaryGenreName());
         }
 

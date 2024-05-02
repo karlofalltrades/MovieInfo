@@ -9,7 +9,7 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.simpleapp.movieinfo.adapters.SearchAdapter;
@@ -31,7 +31,7 @@ public class DashboardFragment extends Fragment {
         dashboardViewModel.init(getContext());
         recyclerView = binding.recyclerViewSearch;
         adapter = new SearchAdapter(new ArrayList<>());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         recyclerView.setAdapter(adapter);
 
         dashboardViewModel.getMovies().observe(getViewLifecycleOwner(), movies -> adapter.updateList(movies));

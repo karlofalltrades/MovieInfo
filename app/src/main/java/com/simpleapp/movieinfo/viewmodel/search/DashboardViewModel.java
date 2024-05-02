@@ -18,7 +18,6 @@ public class DashboardViewModel extends ViewModel {
 
     private MutableLiveData<List<Movie>> movies;
     private Context context;
-
     private List<Movie> cachedMovies;
 
     public void init(Context context) {
@@ -42,14 +41,12 @@ public class DashboardViewModel extends ViewModel {
     public void searchMovies(String query) {
         if (movies != null) {
             List<Movie> filteredMovies = new ArrayList<>();
-            for (Movie movie : movies.getValue()) {
-                if (movie.getTrackName().contains(query)) {
+            for (Movie movie : cachedMovies) {
+                if (movie.getTrackName().toLowerCase().trim().contains(query.toLowerCase().trim())) {
                     filteredMovies.add(movie);
                 }
             }
-            if (!filteredMovies.isEmpty()) {
-                movies.postValue(filteredMovies);
-            }
+            movies.postValue(filteredMovies);
         }
     }
 }
