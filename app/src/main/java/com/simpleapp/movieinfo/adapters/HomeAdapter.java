@@ -74,7 +74,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MovieViewHolde
         public void bind(Movie movie) {
             Picasso.get().load(extractIdFromUrl(movie.getArtworkUrl100())).into(artWorkImage);
             trackName.setText(movie.getTrackName());
-            trackPrice.setText(String.format("$%.2f", movie.getTrackPrice()));
+            trackPrice.setText(String.format("$%.2f", movie.getTrackPrice()) + " " + movie.getCurrency().toUpperCase());
             primaryGenre.setText(movie.getPrimaryGenreName());
         }
 

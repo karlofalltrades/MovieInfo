@@ -1,5 +1,6 @@
 package com.simpleapp.movieinfo.ui.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.simpleapp.movieinfo.adapters.SearchAdapter;
 import com.simpleapp.movieinfo.databinding.FragmentDashboardBinding;
+import com.simpleapp.movieinfo.ui.details.MovieDetailsActivity;
 import com.simpleapp.movieinfo.viewmodel.search.DashboardViewModel;
 
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ public class DashboardFragment extends Fragment {
         recyclerView.setVisibility(View.INVISIBLE);
         SearchView searchView = binding.searchView;
         setupSearchViewListener(searchView);
+        setAdapterClickListener();
 
         return binding.getRoot();
     }
@@ -65,6 +68,14 @@ public class DashboardFragment extends Fragment {
                 }
                 return false;
             }
+        });
+    }
+
+    private void setAdapterClickListener() {
+        adapter.setOnItemClickListener(movie -> {
+            Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
+            intent.putExtra("movie", movie);
+            startActivity(intent);
         });
     }
 

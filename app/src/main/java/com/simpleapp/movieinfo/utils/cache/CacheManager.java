@@ -27,6 +27,33 @@ public class CacheManager {
         }
     }
 
+    public static <T> T getFromCache(Context context, String key, Type type) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String json = sharedPreferences.getString(key, null);
+        if (json != null) {
+            return gson.fromJson(json, type);
+        } else {
+            return null;
+        }
+    }
+
+    public static <T> void saveToCache(Context context, String key, T data, Type type) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String json = gson.toJson(data, type);
+        editor.putString(key, json);
+        editor.apply();
+    }
+
+    public static <T> boolean updateCache(Context context, String key, T newData) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String json = gson.toJson(newData);
+        editor.putString(key, json);
+        boolean success = editor.commit();
+        return success;
+    }
+
     public static <T> void saveToCacheDir(Context context, String fileName, T data) {
         try {
             String json = gson.toJson(data);

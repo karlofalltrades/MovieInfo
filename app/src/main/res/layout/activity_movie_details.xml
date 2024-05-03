@@ -4,16 +4,14 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <!-- Artwork image view -->
     <ImageView
         android:id="@+id/artworkImageView"
-        android:layout_width="150dp"
-        android:layout_height="200dp"
+        android:layout_width="170dp"
+        android:layout_height="250dp"
         android:scaleType="centerCrop"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="20dp"/>
 
-    <!-- Movie details layout -->
     <LinearLayout
         android:id="@+id/movieDetailsLayout"
         android:layout_width="match_parent"
@@ -23,7 +21,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp">
 
-        <!-- Trackname text view -->
         <TextView
             android:id="@+id/trackNameTextView"
             android:layout_width="wrap_content"
@@ -31,12 +28,12 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- Price label and text view -->
         <TextView
             android:id="@+id/priceLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Price: "
+            android:textStyle="bold"
             android:textSize="14sp"
             android:layout_marginTop="8dp" />
         <TextView
@@ -45,12 +42,12 @@
             android:layout_height="wrap_content"
             android:textSize="14sp" />
 
-        <!-- Genre label and text view -->
         <TextView
             android:id="@+id/genreLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Genre: "
+            android:textStyle="bold"
             android:textSize="14sp"
             android:layout_marginTop="8dp" />
         <TextView
@@ -59,12 +56,12 @@
             android:layout_height="wrap_content"
             android:textSize="14sp" />
 
-        <!-- Artist label and text view -->
         <TextView
             android:id="@+id/artistLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Artist: "
+            android:textStyle="bold"
             android:textSize="14sp"
             android:layout_marginTop="8dp" />
         <TextView
@@ -73,12 +70,12 @@
             android:layout_height="wrap_content"
             android:textSize="14sp" />
 
-        <!-- Release date label and text view -->
         <TextView
             android:id="@+id/releaseDateLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Release Date: "
+            android:textStyle="bold"
             android:textSize="14sp"
             android:layout_marginTop="8dp" />
         <TextView
@@ -97,15 +94,21 @@
 
     </LinearLayout>
 
-    <!-- Full description text view -->
+    <TextView
+        android:id="@+id/descriptionLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:text="Description: "
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/movieDetailsLayout" />
     <TextView
         android:id="@+id/descriptionTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginEnd="16dp"
-        android:layout_below="@id/movieDetailsLayout" />
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/descriptionLabel" />
 
 </RelativeLayout>
