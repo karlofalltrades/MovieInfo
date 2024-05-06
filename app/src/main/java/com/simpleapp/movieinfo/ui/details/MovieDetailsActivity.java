@@ -23,7 +23,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
     private ActivityMovieDetailsBinding binding;
     private MovieDetailsViewModel movieDetailsViewModel;
-    private int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +32,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         View view = binding.getRoot();
         EdgeToEdge.enable(this);
         setContentView(view);
-        Toast.makeText(this, "onCreate is called", Toast.LENGTH_SHORT).show();
 
         movieDetailsViewModel.init(this);
 
@@ -67,10 +65,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         binding.descriptionTextView.setText(movie.getLongDescription());
 
         Picasso.get().load(extractIdFromUrl(movie.getArtworkUrl100())).into(binding.artworkImageView);
-        setClickListener(movie);
+        setButtonClickListener(movie);
     }
 
-    private void setClickListener (Movie movie) {
+    private void setButtonClickListener (Movie movie) {
         if (movieDetailsViewModel.isMovieInFavorites(movie)) binding.addToFavorites.setText("Remove from favorites");
         binding.addToFavorites.setOnClickListener(v -> {
             if (movieDetailsViewModel.isMovieInFavorites(movie)){
@@ -80,7 +78,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
             } else {
                 movieDetailsViewModel.addToFavorites(movie);
                 Toast.makeText(this, "Added to favorites", Toast.LENGTH_SHORT).show();
-                binding.addToFavorites.setText("Remove to favorite");
+                binding.addToFavorites.setText("Remove from favorite");
             }
         });
     }

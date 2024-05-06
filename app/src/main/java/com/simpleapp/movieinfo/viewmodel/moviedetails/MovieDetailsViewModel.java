@@ -18,7 +18,7 @@ public class MovieDetailsViewModel extends ViewModel {
     private Context context;
     private List<Movie> movieList;
     private MediatorLiveData<String> mediatorLiveData = new MediatorLiveData<>();
-    private Type listType;
+    private final Type listType = new TypeToken<List<Movie>>() {}.getType();;
     private boolean isMovieFavorite = false;
 
     public void init(Context context) {
@@ -49,26 +49,22 @@ public class MovieDetailsViewModel extends ViewModel {
     }
 
     public void saveToCache() {
-        CacheManager.saveToCacheDir(context, "movie_favorites.json", movieList);
+        CacheManager.saveToCache(context, "movie_favorites", movieList);
         movieList = null;
     }
 
     public void removeFromFavorites(Movie movie) {
-        movieList.remove(movie);
+        if (movieList != null && !movieList.isEmpty()) {
+            for (int i = 0; i < movieList.size(); i++) {
+                if (movieList.get(i).getTrackName().trim().equalsIgnoreCase(movie.getTrackName().trim())) {
+                    movieList.remove(i);
+                }
+            }
+        }
         saveToCache();
     }
 
     public void getMovieFavoritesList() {
-        listType = new TypeToken<List<Movie>>() {}.getType();
-        movieList = CacheManager.getFromCacheDir(context, "movie_favorites.json", listType);
-        if (movieList != null && !movieList.isEmpty()) {
-            int count = 0;
-            for (Movie movie : movieList) {
-                Log.d("MOVIE:" , movie.getTrackName());
-                Log.d("MOVIE INDEX:", movieList.indexOf(movie) + "");
-                Log.d("COUNT", ""+count++);
-            }
-
-        }
+        movieList = CacheManager.getFromCache(context, "movie_favorites", listType);
     }
 }

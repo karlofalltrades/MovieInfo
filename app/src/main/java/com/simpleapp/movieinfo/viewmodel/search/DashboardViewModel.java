@@ -35,7 +35,7 @@ public class DashboardViewModel extends ViewModel {
     private void loadMovies() {
         Type listType = new TypeToken<List<Movie>>() {}.getType();
         cachedMovies = CacheManager.getFromCacheDir(context, "movies_cache.json", listType);
-        movies.postValue(cachedMovies);
+        movies.setValue(cachedMovies);
     }
 
     public void searchMovies(String query) {
@@ -46,7 +46,7 @@ public class DashboardViewModel extends ViewModel {
                     filteredMovies.add(movie);
                 }
             }
-            movies.postValue(filteredMovies);
+            movies.setValue(filteredMovies);
         }
     }
 }
