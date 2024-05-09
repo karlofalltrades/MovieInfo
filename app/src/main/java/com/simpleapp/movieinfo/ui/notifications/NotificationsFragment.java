@@ -5,11 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -17,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.simpleapp.movieinfo.adapters.FavoritesAdapter;
 import com.simpleapp.movieinfo.databinding.FragmentNotificationsBinding;
-import com.simpleapp.movieinfo.model.Movie;
 import com.simpleapp.movieinfo.ui.details.MovieDetailsActivity;
 import com.simpleapp.movieinfo.viewmodel.favorites.NotificationsViewModel;
 
@@ -53,16 +49,6 @@ public class NotificationsFragment extends Fragment {
             Intent intent = new Intent(getActivity(), MovieDetailsActivity.class);
             intent.putExtra("movie", movie);
             startActivity(intent);
-        });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        notificationsViewModel.getMovies().observe(getViewLifecycleOwner(), movies -> {
-            if (movies != null && !movies.isEmpty()) {
-                adapter.updateList(movies);
-            }
         });
     }
 

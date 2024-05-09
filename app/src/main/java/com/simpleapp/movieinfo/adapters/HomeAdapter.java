@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MovieViewHolde
 
     public interface OnItemClickListener {
         void onItemClick(Movie movie);
+        void onImageButtonClick(Movie movie);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -36,7 +38,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MovieViewHolde
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_movie_item, parent, false);
         return new MovieViewHolder(view, onItemClickListener, movies);
     }
 
@@ -51,16 +53,19 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MovieViewHolde
         return movies != null ? movies.size() : 0;
     }
 
-    public static class MovieViewHolder extends RecyclerView.ViewHolder {
+    public class MovieViewHolder extends RecyclerView.ViewHolder {
         ImageView artWorkImage;
         TextView trackName, trackPrice, primaryGenre;
+        ImageButton imageButton;
 
         public MovieViewHolder(@NonNull View itemView, OnItemClickListener onItemClickListener, List<Movie> movies) {
             super(itemView);
-            artWorkImage = itemView.findViewById(R.id.imageViewArtwork);
-            trackName = itemView.findViewById(R.id.textViewTrackName);
-            trackPrice = itemView.findViewById(R.id.textViewTrackPrice);
-            primaryGenre = itemView.findViewById(R.id.textViewPrimaryGenre);
+            artWorkImage = itemView.findViewById(R.id.homeImageViewArtwork);
+            trackName = itemView.findViewById(R.id.homeTextViewTrackName);
+            trackPrice = itemView.findViewById(R.id.homeTextViewTrackPrice);
+            primaryGenre = itemView.findViewById(R.id.homeTextViewPrimaryGenre);
+            imageButton = itemView.findViewById(R.id.imageButtonFavorites);
+
             itemView.setOnClickListener( v -> {
                 if (onItemClickListener != null) {
                     int position = getAdapterPosition();
@@ -76,6 +81,16 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MovieViewHolde
             trackName.setText(movie.getTrackName());
             trackPrice.setText(String.format("$%.2f", movie.getTrackPrice()) + " " + movie.getCurrency().toUpperCase());
             primaryGenre.setText(movie.getPrimaryGenreName());
+            imageButton.setImageResource(!movie.isChecked() ? R.drawable.round_favorite_border_24 : R.drawable.round_favorite_24);
+            imageButton.setOnClickListener(v -> {
+                if (onItemClickListener != null) {
+                    if (getAdapterPosition() != RecyclerView.NO_POSITION) {
+                        onItemClickListener.onImageButtonClick(movies.get(getAdapterPosition()));
+                        movie.setChecked(!movie.isChecked());
+                        imageButton.setImageResource(!movie.isChecked() ? R.drawable.round_favorite_border_24 : R.drawable.round_favorite_24);
+                    }
+                }
+            });
         }
 
         private String extractIdFromUrl(String url) {

@@ -153,6 +153,15 @@ public class Movie implements Serializable {
     @SerializedName("hasITunesExtras")
     boolean hasITunesExtras;
 
+    private boolean isChecked = false;
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
 
     public void setWrapperType(String wrapperType) {
         this.wrapperType = wrapperType;

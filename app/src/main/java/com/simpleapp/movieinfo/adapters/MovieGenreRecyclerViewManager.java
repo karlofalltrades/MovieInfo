@@ -7,14 +7,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.reflect.TypeToken;
 import com.simpleapp.movieinfo.R;
 import com.simpleapp.movieinfo.model.Movie;
 import com.simpleapp.movieinfo.ui.details.MovieDetailsActivity;
+import com.simpleapp.movieinfo.ui.moviebygenre.MovieByGenreActivity;
+import com.simpleapp.movieinfo.utils.cache.CacheManager;
 
+import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,14 +31,28 @@ public class MovieGenreRecyclerViewManager {
     private Context context;
     private LinearLayout parentLayout;
     private Map<String, List<Movie>> genreMoviesMap;
+    private List<Movie> favoriteList;
+    private Type listType;
 
     public MovieGenreRecyclerViewManager(Context context, LinearLayout parentLayout) {
         this.context = context;
         this.parentLayout = parentLayout;
         this.genreMoviesMap = new HashMap<>();
+        listType = new TypeToken<List<Movie>>() {}.getType();
+        this.favoriteList = getFavoritesListCache();
     }
 
     public void addMovies(List<Movie> movies) {
+        if (favoriteList != null && !favoriteList.isEmpty()) {
+            for (int i = 0; i < movies.size(); i++) {
+                for (int j = 0; j < favoriteList.size(); j++) {
+                    if (movies.get(i).getTrackName().trim().equalsIgnoreCase(favoriteList.get(j).getTrackName().trim())) {
+                        movies.get(i).setChecked(true);
+                    }
+                }
+            }
+        }
+
         for (Movie movie : movies) {
             String genre = movie.getPrimaryGenreName();
             if (!genreMoviesMap.containsKey(genre)) {
@@ -46,6 +66,11 @@ public class MovieGenreRecyclerViewManager {
             List<Movie> genreMovies = entry.getValue();
 
             RelativeLayout relativeLayout = getRelativeLayout(genre);
+            relativeLayout.setOnClickListener(v -> {
+                Intent intent = new Intent(context, MovieByGenreActivity.class);
+                intent.putExtra("movie", (Serializable) genreMoviesMap);
+                context.startActivity(intent);
+            });
             parentLayout.addView(relativeLayout);
             RecyclerView recyclerView = createRecyclerView(genreMovies);
             parentLayout.addView(recyclerView);
@@ -72,7 +97,7 @@ public class MovieGenreRecyclerViewManager {
         return genreLayout;
     }
 
-        private TextView getTextView(String genre, RelativeLayout.LayoutParams layoutParams) {
+    private TextView getTextView(String genre, RelativeLayout.LayoutParams layoutParams) {
         TextView genreTextView = new TextView(context);
         genreTextView.setLayoutParams(layoutParams);
         genreTextView.setText(genre);
@@ -105,13 +130,56 @@ public class MovieGenreRecyclerViewManager {
         HomeAdapter adapter = new HomeAdapter();
         adapter.setMovies(movies);
         recyclerView.setAdapter(adapter);
-        adapter.setOnItemClickListener(movie -> {
-            Intent intent = new Intent(context, MovieDetailsActivity.class);
-            intent.putExtra("movie", movie);
-            context.startActivity(intent);
+        adapter.setOnItemClickListener(new HomeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Movie movie) {
+                Intent intent = new Intent(context, MovieDetailsActivity.class);
+                intent.putExtra("movie", movie);
+                context.startActivity(intent);
+            }
+
+            @Override
+            public void onImageButtonClick(Movie movie) {
+                if (movie.isChecked()) {
+                    Toast.makeText(context, "Removed from favorites", Toast.LENGTH_SHORT).show();
+                    removeFromFavorites(movie);
+                } else {
+                    Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show();
+                    addToFavorites(movie);
+                }
+            }
         });
 
         return recyclerView;
+    }
+
+    private List<Movie> getFavoritesListCache() {
+        return CacheManager.getFromCache(context, "movie_favorites", listType);
+    }
+
+    public void addToFavorites(Movie movie) {
+        if (favoriteList == null) {
+            favoriteList = new ArrayList<>();
+        }
+        if (!movie.isChecked()) {
+            favoriteList.add(movie);
+            saveToCache();
+        }
+    }
+
+    public void saveToCache() {
+        CacheManager.saveToCache(context, "movie_favorites", favoriteList);
+    }
+
+    public void removeFromFavorites(Movie movie) {
+        if (favoriteList != null && !favoriteList.isEmpty()) {
+            for (int i = 0; i < favoriteList.size(); i++) {
+                if (favoriteList.get(i).getTrackName().trim().equalsIgnoreCase(movie.getTrackName().trim())) {
+                    favoriteList.remove(i);
+                }
+            }
+        }
+        saveToCache();
     }
 }
 
