@@ -30,12 +30,16 @@ public class HomeFragment extends Fragment {
         homeViewModel.init(getContext());
         homeViewModel.fetchMovies();
 
-        homeViewModel.getMoviesLiveData().observe(getViewLifecycleOwner(), movies -> {
-            LinearLayout layout = root.findViewById(R.id.recycler_view_container);
-            movieGenreRecyclerViewManager = new MovieGenreRecyclerViewManager(getActivity(), layout);
-            movieGenreRecyclerViewManager.addMovies(movies);
-        });
+        setupRecyclerViews();
         return root;
+    }
+
+    private void setupRecyclerViews() {
+        homeViewModel.getMoviesLiveData().observe(getViewLifecycleOwner(), movies -> {
+            LinearLayout layout = binding.getRoot().findViewById(R.id.recycler_view_container);
+            movieGenreRecyclerViewManager = new MovieGenreRecyclerViewManager(getActivity(), layout);
+            movieGenreRecyclerViewManager.addMovies(movies, 0);
+        });
     }
 
     @Override

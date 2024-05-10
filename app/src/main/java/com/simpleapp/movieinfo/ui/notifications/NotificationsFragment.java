@@ -18,7 +18,6 @@ import com.simpleapp.movieinfo.ui.details.MovieDetailsActivity;
 import com.simpleapp.movieinfo.viewmodel.favorites.NotificationsViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class NotificationsFragment extends Fragment {
 

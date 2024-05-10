@@ -1,9 +1,6 @@
 package com.simpleapp.movieinfo.viewmodel.moviedetails;
 
 import android.content.Context;
-import android.util.Log;
-
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.gson.reflect.TypeToken;
@@ -17,7 +14,6 @@ import java.util.List;
 public class MovieDetailsViewModel extends ViewModel {
     private Context context;
     private List<Movie> movieList;
-    private MediatorLiveData<String> mediatorLiveData = new MediatorLiveData<>();
     private final Type listType = new TypeToken<List<Movie>>() {}.getType();;
     private boolean isMovieFavorite = false;
 

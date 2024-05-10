@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,7 +43,12 @@ public class MovieGenreRecyclerViewManager {
         this.favoriteList = getFavoritesListCache();
     }
 
-    public void addMovies(List<Movie> movies) {
+    public void addMovies(List<Movie> movies, int orientation) {
+        if (parentLayout.getChildCount() > 0) {
+            RecyclerView existingRecyclerView = (RecyclerView) parentLayout.getChildAt(parentLayout.getChildCount() - 1);
+            existingRecyclerView.setAdapter(null);
+            parentLayout.removeViewAt(parentLayout.getChildCount() - 1);
+        }
         if (favoriteList != null && !favoriteList.isEmpty()) {
             for (int i = 0; i < movies.size(); i++) {
                 for (int j = 0; j < favoriteList.size(); j++) {
@@ -68,11 +74,12 @@ public class MovieGenreRecyclerViewManager {
             RelativeLayout relativeLayout = getRelativeLayout(genre);
             relativeLayout.setOnClickListener(v -> {
                 Intent intent = new Intent(context, MovieByGenreActivity.class);
-                intent.putExtra("movie", (Serializable) genreMoviesMap);
+                intent.putExtra("movieList", (Serializable) genreMovies);
+                intent.putExtra("genre", genre);
                 context.startActivity(intent);
             });
             parentLayout.addView(relativeLayout);
-            RecyclerView recyclerView = createRecyclerView(genreMovies);
+            RecyclerView recyclerView = createRecyclerView(genreMovies, orientation);
             parentLayout.addView(recyclerView);
         }
     }
@@ -119,14 +126,18 @@ public class MovieGenreRecyclerViewManager {
         return genreIcon;
     }
 
-    private RecyclerView createRecyclerView(List<Movie> movies) {
+    private RecyclerView createRecyclerView(List<Movie> movies, int orientation) {
         RecyclerView recyclerView = new RecyclerView(context);
         recyclerView.setLayoutParams(new RecyclerView.LayoutParams(
                 RecyclerView.LayoutParams.MATCH_PARENT,
                 RecyclerView.LayoutParams.WRAP_CONTENT
         ));
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
+        if (orientation == 0) {
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, orientation, false);
+            recyclerView.setLayoutManager(layoutManager);
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context,2));
+        }
         HomeAdapter adapter = new HomeAdapter();
         adapter.setMovies(movies);
         recyclerView.setAdapter(adapter);
