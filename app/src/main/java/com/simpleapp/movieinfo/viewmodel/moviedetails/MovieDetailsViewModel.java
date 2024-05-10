@@ -14,7 +14,7 @@ import java.util.List;
 public class MovieDetailsViewModel extends ViewModel {
     private Context context;
     private List<Movie> movieList;
-    private final Type listType = new TypeToken<List<Movie>>() {}.getType();;
+    private final Type listType = new TypeToken<List<Movie>>() {}.getType();
     private boolean isMovieFavorite = false;
 
     public void init(Context context) {

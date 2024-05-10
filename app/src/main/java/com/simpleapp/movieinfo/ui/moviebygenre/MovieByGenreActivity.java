@@ -19,7 +19,6 @@ public class MovieByGenreActivity extends AppCompatActivity {
 
     private List<Movie> movieList;
     private String genre;
-    private MovieGenreRecyclerViewManager movieGenreRecyclerViewManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class MovieByGenreActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         LinearLayout layout = findViewById(R.id.rv_genre);
-        movieGenreRecyclerViewManager = new MovieGenreRecyclerViewManager(this, layout);
+        MovieGenreRecyclerViewManager movieGenreRecyclerViewManager = new MovieGenreRecyclerViewManager(this, layout);
         movieGenreRecyclerViewManager.addMovies(movieList, 1);
     }
 
